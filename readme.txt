@@ -49,13 +49,7 @@ OLED.OLED_num(bx,by,variable) - Draw a number.
 OLED.OLED_drawbyte(bx,by,width,height,bitmap) - Draw a bitmap.
 -ToDo list
 
--history
-2023/10/26 1.0.0
-2023/10/28 1.1.0
-Add draw box function.
-Add text function.
-2023/11/23 1.2.0
-Add more function.
+
 [JP]
 ===============================
 このライブラリはi2Cの64x32ドットのSSD1306 OLEDを制御できます。
@@ -98,3 +92,4 @@ OLED.OLED_drawbyte(bx,by,width,height,bitmap) - ビットマップを書く。
 
 -更新履歴-
 2024/2/19 前のライブラリからの移植完了
+2024/3/27 ピン用の定義追加
