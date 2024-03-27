@@ -21,6 +21,31 @@ Adafruit OLED ライブラリ https://github.com/adafruit/Adafruit_SSD1306
 #ifndef DANGOTINY_H
 #define DANGOTINY_H
 
+#ifdef __AVR__
+
+#define PIN_LEFT 9
+#define PIN_UP 10
+#define PIN_RIGHT 7
+#define PIN_DOWN 8
+#define PIN_A 5
+
+#elif defined(ARDUINO_RASPBERRY_PI_PICO)
+
+#define PIN_LEFT 9
+#define PIN_UP 10
+#define PIN_RIGHT 7
+#define PIN_DOWN 8
+#define PIN_A 6
+
+#else
+
+#define PIN_LEFT 9
+#define PIN_UP 10
+#define PIN_RIGHT 7
+#define PIN_DOWN 8
+#define PIN_A 5
+
+#endif
 
 class dangotiny
 {
@@ -28,23 +53,26 @@ class dangotiny
 		dangotiny(void);
 		char OLED_ADD = 0x3C;
 		char OLED_buff [256];
+
 		void OLED_init(void);
 		void OLED_fill(char dat);
 		void OLED_clear(void);
-		void OLED_drawfill(const char bmp[]);
-		void OLED_draw8(char dx,char dy,const char bmp[]);
-		void OLED_draw4(char dx,char dy,const char bmp[]);
+		void OLED_drawfill(const uint8_t  bmp[]);
+		void OLED_draw8(char dx,char dy,const uint8_t  bmp[]);
+		void OLED_draw4(char dx,char dy,const uint8_t  bmp[]);
 		void OLED_send(void);
 		void OLED_send2x(void);
 		void OLED_pixel(char dx, char dy, char po);
 		void OLED_line(char x1, char y1, char x2, char y2);
-		void OLED_num(char dx,char dy,int num,char color = 0);
-		void OLED_char_num(char dx, char dy,char ch,char color = 0);
-		void OLED_char(char dx, char dy,uint16_t ch,char color = 0);
-		void OLED_string(char dx, char dy,char* str,char color = 0); 
+		#ifdef __AVR__
+		void OLED_num(char dx,char dy,int num,char color);
+		void OLED_char_num(char dx, char dy,char ch,char color);
+		void OLED_char(char dx, char dy,uint16_t ch,char color);
+		void OLED_string(char dx, char dy,char* str,char color); 
+		#endif
 		void OLED_box(char x1, char y1, char x2, char y2);
 		void OLED_fillbox(int x1, char y1, int x2, char y2,char color);
-		void OLED_drawbyte(int dx, char dy, int dw, char dh, const char bmp[]);
+		void OLED_drawbyte(int dx, char dy, int dw, char dh, const uint8_t  bmp[]);
 		//void tess(void);
 		void syoki(void);
 };

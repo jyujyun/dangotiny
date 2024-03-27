@@ -24,6 +24,7 @@ dangotiny::dangotiny(void){}
 
 void dangotiny::OLED_init(void)
 {
+
 	OLED_clear();
 	syoki();
 	
@@ -38,7 +39,7 @@ void dangotiny::OLED_clear(void)
 		OLED_buff[i] = 0x00;
 	}
 }
-void dangotiny::OLED_drawfill(const char bmp[])
+void dangotiny::OLED_drawfill(const uint8_t  bmp[])
 {
 	uint16_t j = 0;
 	for (int i = 0;i < 256;i++)
@@ -54,7 +55,7 @@ void dangotiny::OLED_fill(char dat)
 	}
 }
 //バイト
-void dangotiny::OLED_draw8(char dx,char dy,const char bmp[])
+void dangotiny::OLED_draw8(char dx,char dy,const uint8_t  bmp[])
 {
 
 		char j = 0;
@@ -82,7 +83,7 @@ void dangotiny::OLED_draw8(char dx,char dy,const char bmp[])
 
 }
 //ニブル バグる!
-void dangotiny::OLED_draw4(char dx,char dy,const char bmp[])
+void dangotiny::OLED_draw4(char dx,char dy,const uint8_t  bmp[])
 {
 	char j = 0;
 	char hy = (dy / 8);
@@ -146,7 +147,7 @@ void dangotiny::OLED_line(char x1, char y1, char x2, char y2)
      if (e2 < dy) { err += dx;y1 += sy; }
   }
 }
-void dangotiny::OLED_drawbyte(int dx, char dy, int dw, char dh, const char bmp[])
+void dangotiny::OLED_drawbyte(int dx, char dy, int dw, char dh, const uint8_t  bmp[])
 {
 	dx *= 8;
 	dw *= 8;
@@ -230,7 +231,7 @@ void dangotiny::OLED_fillbox(int x1, char y1, int x2, char y2,char color)
 
 }
 
-
+#ifdef __AVR__
 void dangotiny::OLED_char(char dx, char dy,uint16_t ch,char color = 0) {
 	
 	dx *= 8;
@@ -265,24 +266,24 @@ void dangotiny::OLED_num(char dx,char dy,int num,char color = 0)
 	if (((num / 10000) % 10) > 0)
 	{
 		pp = 1;
-		OLED_char_num(dx++,dy,((num / 10000) % 10));
+		OLED_char_num(dx++,dy,((num / 10000) % 10),color);
 	}
 	if (((num / 1000) % 10) > 0 || pp == 1)
 	{
 		pp = 1;
-		OLED_char_num(dx++,dy,((num / 1000) % 10));
+		OLED_char_num(dx++,dy,((num / 1000) % 10),color);
 	}
 	if (((num / 100) % 10) > 0 || pp == 1)
 	{
 		pp = 1;
-		OLED_char_num(dx++,dy,((num / 100) % 10));
+		OLED_char_num(dx++,dy,((num / 100) % 10),color);
 	}
 	if (((num / 10) % 10) > 0 || pp == 1)
 	{
 		pp = 1;
-		OLED_char_num(dx++,dy,((num / 10) % 10));
+		OLED_char_num(dx++,dy,((num / 10) % 10),color);
 	}
-	OLED_char_num(dx++,dy,((num / 1) % 10));
+	OLED_char_num(dx++,dy,((num / 1) % 10),color);
 }
 void dangotiny::OLED_char_num(char dx, char dy,char ch,char color = 0)
 {
@@ -301,6 +302,7 @@ void dangotiny::OLED_char_num(char dx, char dy,char ch,char color = 0)
 		OLED_buff[(dy * 64) + dx + 7] = 0xFF * color;
 	}
 }
+#endif
 void dangotiny::OLED_send()
 {
 
@@ -426,11 +428,12 @@ void dangotiny::syoki(void)
 
 {
 
-
 	#ifdef __AVR__
 		Wire.begin();
 	#elif defined(ESP8266) || defined(ESP32)
 		Wire.begin(16,17);
+	#elif defined(ARDUINO_RASPBERRY_PI_PICO)
+		Wire.begin();
 	#else
 		Wire.begin();
 	#endif
