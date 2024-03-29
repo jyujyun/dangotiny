@@ -69,7 +69,11 @@ class dangotiny
 		void OLED_char_num(char dx, char dy,char ch,char color);
 		void OLED_char(char dx, char dy,uint16_t ch,char color);
 		void OLED_string(char dx, char dy,char* str,char color); 
+
 		#endif
+		void OLED_num4(char dx,char dy,int num);
+		void OLED_char4(char dx, char dy,char ch);
+		void OLED_string4(char dx, char dy,char* str); 
 		void OLED_box(char x1, char y1, char x2, char y2);
 		void OLED_fillbox(int x1, char y1, int x2, char y2,char color);
 		void OLED_drawbyte(int dx, char dy, int dw, char dh, const uint8_t  bmp[]);

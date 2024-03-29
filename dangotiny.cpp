@@ -303,6 +303,44 @@ void dangotiny::OLED_char_num(char dx, char dy,char ch,char color = 0)
 	}
 }
 #endif
+void dangotiny::OLED_char4(char dx, char dy, char ch) {
+  for (char i = 0; i < 4; i++) {
+    OLED.OLED_buff[64 * dy + dx * 4 + i] = pgm_read_byte(&font4[ch][i]);
+  }
+}
+void dangotiny::OLED_string4(char dx, char dy, char* str)
+{
+	while (*str) {
+		OLED_char4(dx++,dy,*str++);
+	}
+}
+void dangotiny::OLED_num4(char dx,char dy,int num)
+{
+	char pp = 0;
+	if (((num / 10000) % 10) > 0)
+	{
+		pp = 1;
+		OLED_char4(dx++,dy,((num / 10000) % 10)+48);
+	}
+	if (((num / 1000) % 10) > 0 || pp == 1)
+	{
+		pp = 1;
+		OLED_char4(dx++,dy,((num / 1000) % 10)+48);
+	}
+	if (((num / 100) % 10) > 0 || pp == 1)
+	{
+		pp = 1;
+		OLED_char4(dx++,dy,((num / 100) % 10)+48);
+	}
+	if (((num / 10) % 10) > 0 || pp == 1)
+	{
+		pp = 1;
+		OLED_char4(dx++,dy,((num / 10) % 10)+48);
+	}
+	OLED_char4(dx++,dy,((num / 1) % 10)+48);
+}
+
+
 void dangotiny::OLED_send()
 {
 
