@@ -24,13 +24,17 @@ dangotiny::dangotiny(void){}
 
 void dangotiny::OLED_init(void)
 {
-
+	#if INIT_PIN
+		pinMode(PIN_LEFT, INPUT_PULLUP);
+		pinMode(PIN_UP, INPUT_PULLUP);
+		pinMode(PIN_DOWN, INPUT_PULLUP);
+		pinMode(PIN_RIGHT, INPUT_PULLUP);
+		pinMode(PIN_A, INPUT_PULLUP);
+  	#endif
 	OLED_clear();
 	syoki();
 	
 	OLED_send();
-
-	
 }
 void dangotiny::OLED_clear(void)
 {
@@ -52,6 +56,13 @@ void dangotiny::OLED_fill(char dat)
 	for (int i = 0;i < 256;i++)
 	{
 		OLED_buff[i] = dat;
+	}
+}
+void dangotiny::OLED_flip(void)
+{
+	for (int i = 0;i < 256;i++)
+	{
+		OLED_buff[i] = ~OLED_buff[i];
 	}
 }
 //バイト
@@ -179,9 +190,6 @@ void dangotiny::OLED_box(char x1, char y1, char x2, char y2)
 void dangotiny::OLED_fillbox(int x1, char y1, int x2, char y2,char color)
 {
 	//color
-	//0 black
-	//1 white
-	//2 gray
 	if (color == 0)
 	{
 		for (int i = x1;i <= x2;i++)
@@ -211,7 +219,7 @@ void dangotiny::OLED_fillbox(int x1, char y1, int x2, char y2,char color)
 			}
 		}
 	}
-	else if (color == 2)
+	else if (color == 3)
 	{
 		for (int i = x1;i <= x2;i++)
 		{
@@ -228,10 +236,43 @@ void dangotiny::OLED_fillbox(int x1, char y1, int x2, char y2,char color)
 			}
 		}
 	}
-
+	else if (color == 4)
+	{
+		for (int i = x1;i <= x2;i++)
+		{
+			for (char j = y1;j <= y2;j++)
+			{
+				if (i % 2 == 0 && j % 2 == 0)
+				{
+					OLED.OLED_pixel(i, j, 1);
+				}
+				else
+				{
+					OLED.OLED_pixel(i, j, 0);
+				}
+			}
+		}
+	}
+	else if (color == 2)
+	{
+		for (int i = x1;i <= x2;i++)
+		{
+			for (char j = y1;j <= y2;j++)
+			{
+				if (i % 2 == 0 && j % 2 == 0)
+				{
+					OLED.OLED_pixel(i, j, 0);
+				}
+				else
+				{
+					OLED.OLED_pixel(i, j, 1);
+				}
+			}
+		}
+	}
 }
 
-#ifdef __AVR__
+//#ifdef __AVR__
 void dangotiny::OLED_char(char dx, char dy,uint16_t ch,char color = 0) {
 	
 	dx *= 8;
@@ -302,7 +343,7 @@ void dangotiny::OLED_char_num(char dx, char dy,char ch,char color = 0)
 		OLED_buff[(dy * 64) + dx + 7] = 0xFF * color;
 	}
 }
-#endif
+//#endif
 void dangotiny::OLED_char4(char dx, char dy, char ch) {
   for (char i = 0; i < 4; i++) {
     OLED.OLED_buff[64 * dy + dx * 4 + i] = pgm_read_byte(&font4[ch][i]);
@@ -466,15 +507,8 @@ void dangotiny::syoki(void)
 
 {
 
-	#ifdef __AVR__
-		Wire.begin();
-	#elif defined(ESP8266) || defined(ESP32)
-		Wire.begin(16,17);
-	#elif defined(ARDUINO_RASPBERRY_PI_PICO)
-		Wire.begin();
-	#else
-		Wire.begin();
-	#endif
+	Wire.begin();
+
 	Wire.setClock(400000);
 	
 	delay(100);
